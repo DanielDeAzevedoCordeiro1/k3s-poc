@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deploy
+  namespace: deploy
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: backend-deploy
+
+  template:
+    metadata:
+      labels:
+        app: backend-deploy
+
+    spec:
+      containers:
+        - name: backend
+          image: back-deploy:v1
+          imagePullPolicy: Never
+
+          ports:
+            - containerPort: 3003
+
+          envFrom:
+            - configMapRef:
+                name: backend-config
+
+          env:
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secret
+                  key: JWT_SECRET
+
+          resources:
+            requests:
+              cpu: 500m
+              memory: 512Mi
+            limits:
+              cpu: "1000m"
+              memory: 1000Mi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-deploy
+  namespace: deploy
+spec:
+  selector:
+    app: backend-deploy
+  ports:
+    - port: 3003
+      targetPort: 3003

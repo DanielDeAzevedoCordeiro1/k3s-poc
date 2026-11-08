@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: front-config
+  namespace: deploy
+data:
+  BACKEND_UPSTREAM: "backend-deploy:3003"
