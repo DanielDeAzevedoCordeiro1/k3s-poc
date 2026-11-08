@@ -1,0 +1,47 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: prometheus
+    static_configs:
+      - targets:
+          - localhost:9090
+
+  - job_name: k3s-cadvisor
+    scheme: https
+
+    bearer_token_file: /etc/prometheus/credentials/token
+
+    tls_config:
+      ca_file: /etc/prometheus/credentials/ca.crt
+
+    static_configs:
+      - targets:
+          - 192.0.2.10:6443
+        labels:
+          node: example-agent-1
+
+      - targets:
+          - 192.0.2.10:6443
+        labels:
+          node: example-agent-2
+
+    relabel_configs:
+      - source_labels: [node]
+        target_label: __metrics_path__
+        regex: (.+)
+        replacement: /api/v1/nodes/$1/proxy/metrics/cadvisor
+
+  - job_name: k3s-kube-state-metrics
+    scheme: https
+    metrics_path: /api/v1/namespaces/monitoring/services/http:kube-state-metrics:8080/proxy/metrics
+
+    bearer_token_file: /etc/prometheus/credentials/token
+
+    tls_config:
+      ca_file: /etc/prometheus/credentials/ca.crt
+
+    static_configs:
+      - targets:
+          - "192.0.2.10:6443"
