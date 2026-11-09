@@ -1,7 +1,6 @@
 # Laboratório K3s com observabilidade
 
-Prova de conceito para executar uma aplicação React, Node.js e MongoDB em um cluster K3s local, com métricas no Prometheus e Grafana. O objetivo é estudar a infraestrutura; este ambiente não foi preparado para produção.
-
+Prova de conceito para executar uma aplicação React, Node.js e MongoDB em um cluster K3s local, com métricas no Prometheus e Grafana. O objetivo é estudar a infraestrutura, escalonamento e manipulacao de recursos usados pelas aplicacoes.
 - `backend/` e `frontend/`: código e Dockerfiles da aplicação.
 - `manifests/`: recursos Kubernetes.
 - `monitoring/`: Docker Compose e configuração do Prometheus.
